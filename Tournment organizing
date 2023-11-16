@@ -1,0 +1,719 @@
+from tkinter import *
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+import datetime as dt
+import pymysql
+from tkinter import PhotoImage
+from PIL import Image, ImageTk
+import time as t
+
+dd = dt.date.today()
+#print(dd)
+de=dt.date(2023,11,30)
+#print(de)
+
+if de>dd:
+    print("jj")
+else :
+    print("hh")
+
+# creating gui
+def main():  
+
+    a=tk.Tk()
+    a.title("Login Page")
+    a.geometry("1500x800")
+    a.config(bg='darkslategray1')   
+    wel=Label(a,text="WELCOME")
+    wel.place(x=550,y=100)
+    us=Label(a,text="Username")
+    us.place(x=450,y=200)
+    use=tk.Entry(a)
+    use.place(x=550,y=200)
+    ps=Label(a,text="Password")
+    ps.place(x=450,y=250)
+    pse=tk.Entry(a)
+    pse.place(x=550,y=250)
+    
+    
+    # connecting the database
+    
+    mydb=pymysql.connect(
+         host="localhost",
+         user="admin",
+         password="admin",
+         database="hock"
+         )
+    mycur=mydb.cursor()
+
+#login
+
+    def login():
+        global data_text
+    
+        username=use.get()
+        password=pse.get()
+        
+        us1="select team_name from inser"
+        mycur.execute(us1,)
+        r1=mycur.fetchall()
+        #print(res)
+        
+       
+        if username!="" and username!="committe" :
+            if username!="":
+                if password !="":
+                    
+                        l=tk.Tk()
+                        l.title("Game")
+                        l.geometry("1500x800")
+                        print("hii")
+                        l.config(bg="aquamarine1")
+                        
+                        ii=Label(l,text="Team Information")
+                        ii.place(x=0,y=0)
+                        
+                        tn=Label(l,text="Team name")
+                        tn.place(x=0,y=40)
+                        data_text = tk.Text(l, width=7, height=2)
+                        data_text.place(x=0,y=60)
+                        #t.sleep(10)
+                        tp=Label(l,text="Place")
+                        tp.place(x=160,y=40)
+                        d1=tk.Text(l, width=7, height=2)
+                        d1.place(x=160,y=60)
+                        
+                        tp=Label(l,text="contact")
+                        tp.place(x=320,y=40)
+                        d2=tk.Text(l, width=10, height=2)
+                        d2.place(x=320,y=60)
+                        
+                        
+                        
+                        #sql="SELECT * from hock1 where username= %s and password=%s "
+                        sql="SELECT Team_name from inser where username= %s and password=%s "
+                        
+                        val=(username,password)
+                        mycur.execute(sql,val)
+                      
+                        result=mycur.fetchall()
+                        print(result)
+                        data_text.delete(1.0, tk.END)  # Clear previous data
+                        for row in result:
+                            ft=', '.join(map(str, row))
+                            data_text.insert(tk.END, ft + "\n")
+                            print(ft)
+    
+    
+                            
+                        sql1="SELECT place from inser where username= %s and password=%s "
+                        
+                        val1=(username,password)
+                        mycur.execute(sql1,val1)
+                      
+                        result1=mycur.fetchall()
+                        
+                        d1.delete(1.0, tk.END)  # Clear previous data
+                        for row1 in result1:
+                            ft1=', '.join(map(str, row1))
+                            d1.insert(tk.END, ft1 + "\n")
+                        
+                        
+                        sql2="SELECT contact from inser where username= %s and password=%s "
+                        
+                        val2=(username,password)
+                        mycur.execute(sql2,val2)
+                      
+                        result2=mycur.fetchall()
+                        #print(result)
+                        d2.delete(1.0, tk.END)  # Clear previous data
+                        for row2 in result2:
+                            ft2=', '.join(map(str, row2))
+                            d2.insert(tk.END, ft2 + "\n")
+                            
+                        def upm():
+                            up=Label(l,text="Fixtures")
+                            up.place(x=10,y=200)
+                            fixte=Label(l,text="Team")
+                            fixte.place(x=50,y=220)
+                            fixt=tk.Text(l, width=9, height=10)
+                            fixt.place(x=50,y=250)
+                            
+                            
+                            fixte1=Label(l,text="VS")
+                            fixte1.place(x=150,y=220)
+                            fixt1=tk.Text(l, width=4, height=10)
+                            fixt1.place(x=150,y=250)
+                            
+                            fixte2=Label(l,text="Team")
+                            fixte2.place(x=210,y=220)
+                            fixt2=tk.Text(l, width=9, height=10)
+                            fixt2.place(x=210,y=250)
+                            
+                            fixte3=Label(l,text="Result")
+                            fixte3.place(x=320,y=220)
+                            fixt3=tk.Text(l, width=9, height=10)
+                            fixt3.place(x=320,y=250)
+                            
+                            
+                            f1="SELECT team from fixt where %s in (team,team1)"
+                            t1=(ft,)
+                            mycur.execute(f1,t1)
+                          
+                            re1=mycur.fetchall()
+                            #print(result)
+                            fixt.delete(1.0, tk.END)  # Clear previous data
+                            for r1 in re1:
+                                f0=', '.join(map(str, r1))
+                                fixt.insert(tk.END, f0 + "\n")
+                            f2="SELECT vs from fixt where %s in (team,team1)"
+                            t2=(ft,)
+                            mycur.execute(f2,t2)
+                          
+                            re2=mycur.fetchall()
+                            #print(result)
+                            fixt1.delete(1.0, tk.END)  # Clear previous data
+                            for r2 in re2:
+                                f1=', '.join(map(str, r2))
+                                fixt1.insert(tk.END, f1 + "\n")
+                            
+                            f3="SELECT team1 from fixt where %s in (team,team1)"
+                            t3=(ft,)
+                            mycur.execute(f3,t3)
+                          
+                            re3=mycur.fetchall()
+                            #print(result)
+                            fixt2.delete(1.0, tk.END)  # Clear previous data
+                            for r3 in re3:
+                                f3=', '.join(map(str, r3))
+                                fixt2.insert(tk.END, f3 + "\n")
+                                
+                                # result
+                            f4="SELECT result from fixt where %s in (team,team1)"
+                            t4=(ft,)
+                            mycur.execute(f4,t4)
+                          
+                            re4=mycur.fetchall()
+                            #print(result)
+                            fixt3.delete(1.0, tk.END)  # Clear previous data
+                            for r4 in re4:
+                                f4=', '.join(map(str, r4))
+                                fixt3.insert(tk.END, f4 + "\n")
+                            
+                            
+                            
+                            
+                            
+                        def sts():
+                            stt=Label(l,text="STATS")
+                            stt.place(x=600,y=10)
+                            cont0=tk.Text(l, width=2, height=10 )
+                            cont0.place(x=650,y=50)
+                            team=tk.Text(l, width=16, height=10)
+                            team.place(x=700,y=50)
+                            #pt=tk.Text(c, width=9, height=12)
+                            #t.place(x=1030,y=100)
+                            #pt=tk.Text(c, width=3, height=12)
+                            
+                            
+                            
+                            
+                            
+                            
+                            ftt=Label(l,text="No")
+                            ftt.place(x=650,y=20)
+                            team1=Label(l,text="Team Name")
+                            team1.place(x=700,y=20)
+                            #pt.place(x=1030,y=100)
+                            
+                            
+                            # index
+                            da0="select sno from inser"
+                            mycur.execute(da0,)
+                            res0=mycur.fetchall()
+                            print(res0)
+                            for row0 in res0:
+                                ft0=', '.join(map(str, row0))
+                                cont0.insert(tk.END, ft0 + "\n")
+                           
+                            
+                           
+                                
+                            da="SELECT team, SUM(points) AS total_points FROM fixt GROUP BY team ORDER BY total_points DESC"
+                            mycur.execute(da,)
+                            res=mycur.fetchall()
+                            print(res)
+                            for row1 in res:
+                                ft1='     '.join(map(str, row1))
+                                team.insert(tk.END, ft1 + "\n")
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        # buttons
+                        um=Button(l,text='Fixtures',command=upm)
+                        um.place(x=110,y=150)
+                        
+                        st=Button(l,text='Points Table',command=sts)
+                        st.place(x=250,y=150)
+    
+                    
+                else :
+                    messagebox.showinfo("Information", "fill the password")
+                
+            else :
+                messagebox.showinfo("Information", "fill the username")
+        
+        elif username=="committe":
+            if password=="committe123":
+                c=Tk()
+                c.geometry("1300x800")
+                c.config(bg="beige")
+                team1=Label(c,text="Team Name")
+                team1.place(x=50,y=50)
+                team=tk.Text(c, width=10, height=10)
+                team.place(x=50,y=100)
+                pla1=Label(c,text="Place")
+                pla1.place(x=200,y=50)
+                plac=tk.Text(c, width=10, height=10)
+                plac.place(x=200,y=100)
+                #contact
+                cont=Label(c,text="contact")
+                cont.place(x=350,y=50)
+                cont1=tk.Text(c, width=10, height=10)
+                cont1.place(x=350,y=100)
+                cont0=tk.Text(c, width=3, height=10)
+                cont0.place(x=0,y=100)
+                
+                # index
+                da0="select sno from inser"
+                mycur.execute(da0,)
+                res0=mycur.fetchall()
+                #print(res)
+                for row0 in res0:
+                    ft0=', '.join(map(str, row0))
+                    cont0.insert(tk.END, ft0 + "\n")
+               
+                
+               
+                
+                # team
+                
+                da="select team_name from inser"
+                mycur.execute(da,)
+                res=mycur.fetchall()
+                print(res)
+                for row1 in res:
+                    ft1=', '.join(map(str, row1))
+                    team.insert(tk.END, ft1 + "\n")
+                    
+                # place
+                pl="select place from inser"
+                mycur.execute(pl,)
+                res1=mycur.fetchall()
+                print(res1)
+                for row2 in res1:
+                    ft2=', '.join(map(str, row2))
+                    plac.insert(tk.END, ft2 + "\n")
+                    
+                #contct
+                cal="select contact from inser"
+                mycur.execute(cal,)
+                res2=mycur.fetchall()
+                print(res2)
+                for row3 in res2:
+                    ft3=', '.join(map(str, row3))
+                    cont1.insert(tk.END, ft3 + "\n")
+                    
+                    
+                
+                    
+                def upm1():
+                    #  fixtures
+                    fixt0=tk.Text(c, width=2, height=10 )
+                    fixt0.place(x=500,y=130)
+                    
+                    fixt=tk.Text(c, width=9, height=10 )
+                    fixt.place(x=550,y=130)
+                    fixt1=tk.Text(c, width=4, height=10)
+                    fixt1.place(x=640,y=130)
+                    fixt2=tk.Text(c, width=9, height=10)
+                    fixt2.place(x=690,y=130)
+                    fixt3=tk.Text(c, width=9, height=10)
+                    fixt3.place(x=780,y=130)
+                    
+                    ftt=Label(c,text="No")
+                    ftt.place(x=500,y=100)
+                    ftt1=Label(c,text="Team")
+                    ftt1.place(x=550,y=100)
+                    ftt2=Label(c,text="vs")
+                    ftt2.place(x=640,y=100)
+                    ftt3=Label(c,text="Team")
+                    ftt3.place(x=690,y=100)
+                    ftt3=Label(c,text="Result")
+                    ftt3.place(x=780,y=100)
+                    
+                    
+                    """
+                    
+                    f0="SELECT match_no from fixt"
+                    mycur.execute(f0)
+                  
+                    re0=mycur.fetchall()
+                    #print(result)
+                    fixt0.delete(1.0, tk.END)  # Clear previous data
+                    for r0 in re0:
+                        f00=', '.join(map(str, r0))
+                        fixt0.insert(tk.END, f00 + "\n")
+                    
+                    
+                    """
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    f1="SELECT team from fixt"
+                    mycur.execute(f1)
+                  
+                    re1=mycur.fetchall()
+                    #print(result)
+                    fixt.delete(1.0, tk.END)  # Clear previous data
+                    for r1 in re1:
+                        f0=', '.join(map(str, r1))
+                        fixt.insert(tk.END, f0 + "\n")
+                        
+                    f2="SELECT vs from fixt "
+                    
+                    mycur.execute(f2)
+                  
+                    re2=mycur.fetchall()
+                    #print(result)
+                    fixt1.delete(1.0, tk.END)  # Clear previous data
+                    for r2 in re2:
+                        f1=', '.join(map(str, r2))
+                        fixt1.insert(tk.END, f1 + "\n")
+                    
+                    f3="SELECT team1 from fixt "
+                    
+                    mycur.execute(f3)
+                  
+                    re3=mycur.fetchall()
+                    #print(result)
+                    fixt2.delete(1.0, tk.END)  # Clear previous data
+                    for r3 in re3:
+                        f2=', '.join(map(str, r3))
+                  
+                        fixt2.insert(tk.END, f2 + "\n")
+                        
+                    f4="SELECT result from fixt "
+                    
+                    mycur.execute(f4)
+                  
+                    re4=mycur.fetchall()
+                    #print(result)
+                    fixt3.delete(1.0, tk.END)  # Clear previous data
+                    for r4 in re4:
+                        f4=', '.join(map(str, r4))
+                  
+                        fixt3.insert(tk.END, f4 + "\n")
+                        
+                        
+                def add():
+                    et1=Label(c,text="Team")
+                    et1.place(x=100,y=400)
+                    ete=tk.Entry(c)
+                    ete.place(x=150,y=400)
+                    et2=Label(c,text="Team")
+                    et2.place(x=100,y=450)
+                    ete2=tk.Entry(c)
+                    ete2.place(x=150,y=450)
+                    
+                    
+                    
+                    
+                    def ins_val():
+                        team=ete.get()
+                        team1=ete2.get()
+                        
+                        ss="insert into fixt (team,team1) values (%s,%s)"
+                        vs=(team,team1)
+                        mycur.execute(ss,vs)
+                        mydb.commit()
+                        mydb.close()
+                        print("Sucess")
+                    
+                    
+                    
+                    
+                    
+                    oo=Button(c,text="Submit",command=ins_val)
+                    oo.place(x=125,y=500)
+                
+                
+                # update fixtures
+                
+                def upd():
+                    ud1=Label(c,text="Match no")
+                    ud1.place(x=450,y=400)
+                    ude1=tk.Entry(c)
+                    ude1.place(x=550,y=400)
+                    ud2=Label(c,text="result")
+                    ud2.place(x=450,y=450)
+                    ude2=tk.Entry(c)
+                    ude2.place(x=550,y=450)
+                    
+                    ur1=Label(c,text="won team")
+                    ur1.place(x=700,y=400)
+                    
+                    ure=tk.Entry(c)
+                    ure.place(x=800,y=400)
+                    
+                    # looseing team
+                    ur2=Label(c,text=" Loosing Team")
+                    ur2.place(x=700,y=450)
+                    ur2e=tk.Entry(c)
+                    ur2e.place(x=800,y=450)
+                    
+                    
+                    def ok1():
+                        
+                        wt=ure.get()
+                        match_no=ude1.get()
+                        result=ude2.get()
+                        lt=ur2e.get()
+                        
+                        
+                        
+                        uds="update fixt set result=%s,winning_team= %s,loosing_team=%s where match_no=%s "
+                        ude=(result,wt,lt,match_no)
+                        mycur.execute(uds,ude)
+                        
+                        # lossing team
+                        result="won"
+                        uds1="update fixt set points=if(result=%s,2,0) where match_no=%s "
+                        ude20=(result,match_no)
+                        mycur.execute(uds1,ude20)
+                        
+                        mydb.commit()
+                        mydb.close()
+                        print("Sucessghjk")
+                    
+                    
+                    #buttons
+                    oo1=Button(c,text="Submit",command=ok1)
+                    oo1.place(x=525,y=600)
+                    
+                def table():
+                    cont0=tk.Text(c, width=2, height=10 )
+                    cont0.place(x=920,y=130)
+                    team=tk.Text(c, width=15, height=10)
+                    team.place(x=960,y=130)
+                    #pt=tk.Text(c, width=9, height=12)
+                    #t.place(x=1030,y=100)
+                    #pt=tk.Text(c, width=3, height=12)
+                    
+                    
+                    
+                    
+                    
+                    
+                    ftt=Label(c,text="No")
+                    ftt.place(x=920,y=100)
+                    team1=Label(c,text="Team Name")
+                    team1.place(x=960,y=50)
+                    #pt.place(x=1030,y=100)
+                    
+                    
+                    # index
+                    da0="select sno from inser"
+                    mycur.execute(da0,)
+                    res0=mycur.fetchall()
+                    print(res0)
+                    for row0 in res0:
+                        ft0=', '.join(map(str, row0))
+                        cont0.insert(tk.END, ft0 + "\n")
+                   
+                    
+                   
+                        
+                    da="SELECT team, SUM(points) AS total_points FROM fixt GROUP BY team ORDER BY total_points DESC"
+                    mycur.execute(da,)
+                    res=mycur.fetchall()
+                    print(res)
+                    for row1 in res:
+                        ft1='       '.join(map(str, row1))
+                        team.insert(tk.END, ft1 + "\n")
+                    
+                    
+                    
+                    
+                    
+                    
+               
+               #buttons 
+               
+                um1=Button(c,text='Fixtures',command=upm1)
+                um1.place(x=500,y=50)
+                ad=Button(c,text="Add Fixtures",command=add)
+                ad.place(x=100,y=350)
+                up=Button(c,text="update Fixtures",command=upd)
+                up.place(x=650,y=350)
+                tb=Button(c,text='Points Table',command=table)
+                tb.place(x=920,y=50)
+                
+                
+                
+                
+            else :
+                messagebox.showinfo("Information", "Wrong Inputs")
+                
+            
+    
+            
+    def sign():
+        if de>dd:
+            def payment():
+               
+                m=Label(s,text="Make Payment")
+                m.place(x=750,y=100)
+                ent=Label(s,text="Entry Amount : 500")
+                ent.place(x=700,y=150)
+                checkbox_var1 = IntVar()
+                checkbox1 = tk.Checkbutton(s, text="Declaration :", variable=checkbox_var1)
+                checkbox1.place(x=600,y=200)
+                d1=Label(s,text="1. The entry amount will not give back if any malpractices occur ")
+                d2=Label(s,text="2. The amount will not return back if the Team will not participate in the half of the match")
+                d1.place(x=600,y=225)
+                d2.place(x=600,y=250)
+                co=Label(s,text="Select Payment Method")
+                co.place(x=700,y=300)
+                coe=ttk.Combobox(s)
+                coe["values"]="Select","UPI","Debit Card","Credit Card","QR Code"
+                coe.place(x=700,y=350)
+                coe.current(0)
+                cvar = tk.StringVar()
+                    
+               
+                    
+                
+                def comboval(eee):
+                    c1=coe.get()
+                    
+                    ch1=checkbox_var1.get()
+                    if c1=="UPI":
+                        
+                            
+                        print("hgyt")
+                        ue=Label(s,text="Enter UPI Id")
+                        ue.place(x=750,y=400)
+                        uee=tk.Entry(s)
+                        uee.place(x=877,y=400)
+                        
+                            
+                        
+                    elif c1=="Debit Card":
+                        ue=Label(s,text="Enter Card number")
+                        ue.place(x=750,y=400)
+                        uee=tk.Entry(s)
+                        uee.place(x=877,y=400)
+                        print("fff")
+                    elif c1=="Credit Card":
+                        ue=Label(s,text="Enter Card number")
+                        ue.place(x=750,y=400)
+                        uee=tk.Entry(s)
+                        uee.place(x=877,y=400)
+                        print("llll")
+                    elif c1=="QR Code" :
+                        img()                   
+                        print("ssss")
+                    else :
+                        print("select")
+                coe.bind("<<ComboboxSelected>>", comboval)
+                
+               
+                ok=Button(s,text='Enter Details',command=ins)
+                ok.place(x=800,y=450)
+               
+                sub1=Button(s,text='submit',command=main)
+                sub1.place(x=800,y=500)
+                
+                
+            s=tk.Tk()
+            s.title("Sign up page")
+            s.geometry("1500x800")
+            def img():
+                ar=PhotoImage(file="C:\\Users\\H P\\Downloads\\qr.png")
+                bg=Label(s,image=ar)
+                bg.place(x=877,y=400)
+                
+                
+            def ins():
+                team_name=tme.get()
+                place=ple.get()
+                contact =phe.get()
+                username=use.get()
+                password=pse.get()
+                
+                ins="insert into inser (team_name,place,contact,username,password) values (%s,%s,%s,%s,%s)"
+                val=(team_name,place,contact,username,password)
+                mycur.execute(ins,val)
+                mydb.commit()
+                mydb.close()
+                print("Sucess")
+                
+                
+                
+                
+                
+    
+                
+                
+                
+            tm=Label(s,text="Team name")
+            tm.place(x=250,y=200)
+            tme=tk.Entry(s)
+            tme.place(x=350,y=200)
+            pl=Label(s,text="Place")
+            pl.place(x=250,y=250)
+            ple=tk.Entry(s)
+            ple.place(x=350,y=250)
+            ph=Label(s,text="Phone Number")
+            ph.place(x=250,y=300)
+            phe=tk.Entry(s)
+            phe.place(x=350,y=300)
+            us=Label(s,text="Username")
+            us.place(x=250,y=350)
+            use=tk.Entry(s)
+            use.place(x=350,y=350)
+            ps=Label(s,text="Password")
+            ps.place(x=250,y=400)
+            pse=tk.Entry(s)
+            pse.place(x=350,y=400)
+            
+                        
+           
+            sub=Button(s,text='submit',command=payment)
+            sub.place(x=300,y=500) 
+        else :
+            messagebox.showinfo("Information", "Expired Date")
+     
+
+    
+    # buttons
+    
+    lk=Button(a,text='log in',command=login)
+    lk.place(x=500,y=350)        
+    submit=tk.Button(a,text="sign up",command=sign)
+    submit.place(x=600,y=350)
+    a.mainloop()
+    
+main()
+    
