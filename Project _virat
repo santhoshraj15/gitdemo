@@ -1,1 +1,357 @@
+impoting libiraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
+import datasets
+a=pd.read_csv("virat iod.csv")
+a
+
+Preprocess the data
+remove the vaues that contains DNB or TDNB
+a=a[a['Runs'] !='DNB']
+a=a[a['Runs'] !='TDNB']
+a
+
+using Regex
+replace the 4s and 6s "-" to zero
+a['4s']=a['4s'].replace("-","0",regex=True)
+a['6s']=a['6s'].replace("-","0",regex=True)
+a['BF']=a['BF'].replace("-","0",regex=True)
+a['Runs']=a['Runs'].replace("*","",regex=True).astype(int)
+
+a
+
+convert date format
+a['Start Date']=pd.to_datetime(a['Start Date'],format='%d-%b-%y')
+
+a
+
+drop unnecessary columns
+a=a.drop(['Mins','Pos'],axis="columns")
+
+a
+
+convert type str to float
+a['SR']=a['SR'].astype(float)
+a
+
+convert string to integer
+fours
+four=a['4s'].astype(int)
+
+sum of fours
+f1=four.sum()
+f1
+
+sum of six
+six=a['6s'].astype(int)
+s1=six.sum()
+s1
+
+total boundaries
+fs=f1+s1
+fs
+
+sum of ball faced
+ball=a['BF'].astype(int)
+ba=ball.sum()
+ba
+#boundary per balls
+ff=ba/fs
+ff
+
+finding any missing values
+a.columns[a.isna().any()]
+
+process the data by innings
+inn1=a[a['Inns']=="1"]
+inn2=a[a['Inns']=="2"]
+
+sum of innings runs
+inn1_runs=inn1['Runs'].sum()
+inn2_runs=inn2['Runs'].sum()
+
+create dataframe for innings runs
+inn={"innings":["Target_Setting","Chasing"],"Score":[inn1_runs,inn2_runs]}
+innings=pd.DataFrame(inn)
+innings
+
+Average runs in innings
+#strike Rate
+inn1_sr=inn1["SR"].mean()
+inn2_sr=inn1["SR"].mean()
+
+runs
+inn1_runs_avg=inn1['Runs'].mean()
+inn2_runs_avg=inn2['Runs'].mean()
+ing={"innings":["Target_Setting","Chasing"],"Score_avg":[inn1_runs_avg,inn2_runs_avg],"sr_avg":[inn1_sr,inn2_sr]}
+ings=pd.DataFrame(ing)
+ings
+
+Data visualizations
+average runs ,average Strike Rate vs Innings Type
+plot graph withx,y,z axs
+x=ings['innings']
+y=ings['Score_avg']
+z=ings['sr_avg']
+
+bar_width = 0.15
+x_values = np.arange(len(x))
+plt.figure(figsize=(15, 10))
+plt.bar(x_values + bar_width, y, width=bar_width, label='Average Score')
+plt.bar(x_values + 2*bar_width, z, width=bar_width, label='Average Strike Rate')
+plt.xticks(x_values + bar_width, x)
+plt.xlabel('Innings Type')
+plt.ylabel('Values')
+plt.legend()
+plt.grid()
+plt.show()
+
+Runs Vs Innings Type
+plt.bar(innings['innings'],innings['Score'],width=.2)
+a.groupby('Opposition').describe()
+
+group by oppositions
+aus=a[a['Opposition']=="v Australia"]
+ban=a[a['Opposition']=="v Bangladesh"]
+eng=a[a['Opposition']=="v England"]
+ire=a[a['Opposition']=="v Ireland"]
+nl=a[a['Opposition']=="v Netherlands"]
+nz=a[a['Opposition']=="v New Zealand"]
+pak=a[a['Opposition']=="v Pakistan"]
+sa=a[a['Opposition']=="v South Africa"]
+sl=a[a['Opposition']=="v Sri Lanka"]
+wi=a[a['Opposition']=="v West Indies"]
+afg=a[a['Opposition']=="v Afghanistan"]
+
+Sum of Runs
+afg_runs=afg['Runs'].sum()
+aus_runs=aus['Runs'].sum()
+ban_runs=ban['Runs'].sum()
+eng_runs=eng['Runs'].sum()
+ire_runs=ire['Runs'].sum()
+nl_runs=nl['Runs'].sum()
+nz_runs=nz['Runs'].sum()
+pak_runs=pak['Runs'].sum()
+sa_runs=sa['Runs'].sum()
+sl_runs=sl['Runs'].sum()
+wi_runs=wi['Runs'].sum()
+
+DataFrame for runs and opposition
+nat={"nations":["Afghanistan","Austraila","Bangaladesh","England","Ireland","Netherlands","New Zealand","Pakistan","South Africa","Sri Lanka","West Indies"],
+"Score":[afg_runs,aus_runs,ban_runs,eng_runs,ire_runs,nl_runs,nz_runs,pak_runs,sa_runs,sl_runs,wi_runs]}
+country=pd.DataFrame(nat)
+country
+
+overall runs in every opposition
+x=country['nations']
+y=country['Score']
+plt.figure(figsize=(15, 10))
+plt.bar(x,y)
+
+Average of Strike Rate
+afg_sr=afg['SR'].mean()
+aus_sr=aus['SR'].mean()
+ban_sr=ban['SR'].mean()
+eng_sr=eng['SR'].mean()
+ire_sr=ire['SR'].mean()
+nl_sr=nl['SR'].mean()
+nz_sr=nz['SR'].mean()
+pak_sr=pak['SR'].mean()
+sa_sr=sa['SR'].mean()
+sl_sr=sl['SR'].mean()
+wi_sr=wi['SR'].mean()
+afg_runs=afg['Runs'].mean()
+aus_runs=aus['Runs'].mean()
+ban_runs=ban['Runs'].mean()
+eng_runs=eng['Runs'].mean()
+ire_runs=ire['Runs'].mean()
+nl_runs=nl['Runs'].mean()
+nz_runs=nz['Runs'].mean()
+pak_runs=pak['Runs'].mean()
+sa_runs=sa['Runs'].mean()
+sl_runs=sl['Runs'].mean()
+wi_runs=wi['Runs'].mean()
+
+create Data frame for average runs and average strike rate
+nt={"nations":["Afghanistan","Austraila","Bangaladesh","England","Ireland","Netherlands","New Zealand","Pakistan","South Africa","Sri Lanka","West Indies"],
+"Avg_runs":[afg_runs,aus_runs,ban_runs,eng_runs,ire_runs,nl_runs,nz_runs,pak_runs,sa_runs,sl_runs,wi_runs],
+"Avg_sr":[afg_sr,aus_sr,ban_sr,eng_sr,ire_sr,nl_sr,nz_sr,pak_sr,sa_sr,sl_sr,wi_sr]}
+ct=pd.DataFrame(nt)
+ct
+i=ct['nations']
+j=ct['Avg_runs'].astype(int)
+k=ct['Avg_sr'].astype(int)
+bar_width = 0.31
+i_values = np.arange(len(i))
+plt.figure(figsize=(15, 10))
+plt.bar(i_values + bar_width, j, width=bar_width, label='Average Score')
+plt.bar(i_values + 2*bar_width, k, width=bar_width, label='Average Strike Rate')
+plt.xticks(i_values + bar_width, i)
+plt.xlabel('Nations')
+plt.ylabel('Values')
+plt.legend()
+plt.grid()
+plt.show()
+
+100s and 50s
+afg_h=afg[afg['Runs']>=100]
+aus_h=aus[aus['Runs']>=100]
+ban_h=ban[ban['Runs']>=100]
+eng_h=eng[eng['Runs']>=100]
+ire_h=ire[ire['Runs']>=100]
+nl_h=nl[nl['Runs']>=100]
+nz_h=nz[nz['Runs']>=100]
+pak_h=pak[pak['Runs']>=100]
+sa_h=sa[sa['Runs']>=100]
+sl_h=sl[sl['Runs']>=100]
+wi_h=wi[wi['Runs']>=100]
+nz1
+af=afg_h.shape[0]
+au=aus_h.shape[0]
+ba=ban_h.shape[0]
+en=eng_h.shape[0]
+ir=ire_h.shape[0]
+nl1=nl_h.shape[0]
+nz1=nz_h.shape[0]
+pa=pak_h.shape[0]
+sa1=sa_h.shape[0]
+sl1=sl_h.shape[0]
+wi1=wi_h.shape[0]
+nz
+#50 s
+
+afghanistan
+afg_f=afg[afg['Runs']>=50]
+afg_f=afg_f.shape[0]
+af_f=afg_f-af
+
+australia
+aus_f=aus[aus['Runs']>=50 ]
+aus_f=aus_f.shape[0]
+au_f=aus_f-au
+#bangaladesh
+ban_f=ban[ban['Runs']>=50 ]
+ban_f=ban_f.shape[0]
+ba_f=ban_f-ba
+
+england
+eng_f=eng[eng['Runs']>=50 ]
+eng_f=eng_f.shape[0]
+en_f=eng_f-en
+
+ireland
+ire_f=ire[ire['Runs']>=50 ]
+ire_f=ire_f.shape[0]
+ir_f=ire_f-ir
+
+netherland
+nl_f=nl[nl['Runs']>=50 ]
+nl_f=nl_f.shape[0]
+nl_f=nl_f-nl1
+
+newzealand
+nz_f=nz[nz['Runs']>=50 ]
+nz_f=nz_f.shape[0]
+nz_f=nz_f-nz1
+
+pakistan
+pak_f=pak[pak['Runs']>=50 ]
+pak_f=pak_f.shape[0]
+pa_f=pak_f-pa
+
+south africa
+sa_f=sa[sa['Runs']>=50 ]
+sa_f=sa_f.shape[0]
+sa_f=sa_f-sa1
+
+srilanka
+sl_f=sl[sl['Runs']>=50 ]
+sl_f=sl_f.shape[0]
+sl_f=sl_f-sl1
+
+west indies
+wi_f=wi[wi['Runs']>=50 ]
+wi_f=wi_f.shape[0]
+wi_f=wi_f-wi1
+
+data frame for 100s and 50s
+nat_fh={"nations":["Afghanistan","Austraila","Bangaladesh","England","Ireland","Netherlands","New Zealand","Pakistan","South Africa","Sri Lanka","West Indies"],
+"100s":[af,au,ba,en,ir,nl1,nz1,pa,sa1,sl1,wi1],"50s":[af_f,au_f,ba_f,en_f,ir_f,nl_f,nz_f,pa_f,sa_f,sl_f,wi_f]}
+nat_h=pd.DataFrame(nat_fh)
+nat_h
+m=nat_h['nations']
+n=nat_h['100s']
+o=nat_h['50s']
+bar_width = 0.25
+m_values = np.arange(len(m))
+plt.figure(figsize=(15, 10))
+plt.bar(m_values + bar_width, n, width=bar_width, label='100s')
+plt.bar(m_values + 2*bar_width, o, width=bar_width, label='50s')
+plt.xticks(m_values + bar_width, m)
+plt.xlabel('Nations')
+plt.ylabel('100s and 50s')
+plt.legend()
+plt.grid()
+plt.show()
+
+Total Runs in every Match
+p=a['Start Date']
+q=a['Runs']
+
+plt.figure(figsize=(15, 10))
+plt.plot(p,q)
+plt.grid()
+a.groupby('Ground').describe()
+from sklearn.model_selection import train_test_split
+xtrain,xtest,ytrain,ytest=train_test_split(a['Start Date'],a['Runs'],test_size=0.23)
+print('x_train',xtrain)
+print('x_test',xtest)
+print('y_train',ytrain)
+print('y_test',ytest)
+
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+y=ytrain
+Am=SARIMAX(y, order = (1, 0, 1))
+Am=Am.fit()
+
+print(Am)
+yprd=Am.get_forecast(len(ytest.index))
+yprddf=yprd.conf_int(alpha=1)
+yprddf["predictions"]=Am.predict(start=yprddf.index[0],end=yprddf.index[1])
+yprddf.index=ytest.index
+yprdout=yprddf["predictions"]
+yprdout
+plt.plot(yprdout,color='green',label='Predictions')
+plt.legend()
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+result = seasonal_decompose(a['Runs'], model='additive', period=4)
+result.plot()
+plt.show()
+from statsmodels.tsa.arima.model import ARIMA
+p, d, q = 1, 1, 1 # Example values, adjust based on ACF and PACF plots
+model = ARIMA(a['Runs'], order=(p, d, q))
+model_fit = model.fit()
+
+Summary of the model
+#print(model_fit.summary())
+
+Forecast future performance
+forecast_steps = 3 # Example number of future steps
+forecast, stderr, conf_int = model_fit.forecast(steps=forecast_steps)
+print("Forecast:", forecast)
+model=Prophet()
+
+Project title is viratKholi ODI Formats in India
+I have collected a dataset from ESPN Cricinfo statistics, and I need to perform data preprocessing on this dataset.
+I have data for a cricket match that is split into two innings. I want to determine how many
+runs were scored in each inning and create a visualization to represent this information.
+I have calculated the average runs and average strike rate for each innings of a cricket match, and I'd like to create a visualization to represent these statistics.
+
+I want to group the opposition teams based on the total runs scored, average strike rate, average runs, number of centuries, and number of half-centuries they have achieved in each matches
+I want to create a visualization that shows the total runs scored in each cricket match.
+
+using Time series forecasting algorithm
+I need to partition the dataset into a training set and a testing set for data analysis purposes.
